@@ -1,0 +1,3 @@
+C:/Users/TestUser/TinyRendererClass/build/CMakeFiles/renderer.dir
+C:/Users/TestUser/TinyRendererClass/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/TestUser/TinyRendererClass/build/CMakeFiles/ZERO_CHECK.dir
