@@ -366,6 +366,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClCompile Include="C:\Users\TestUser\TinyRendererClass\main.cpp" />
     <ClCompile Include="C:\Users\TestUser\TinyRendererClass\tgaimage.cpp" />
+    <ClCompile Include="C:\Users\TestUser\TinyRendererClass\model.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
