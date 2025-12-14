@@ -32,36 +32,29 @@ void line(int ax, int ay, int bx, int by, TGAImage &framebuffer, TGAColor color)
     }
 }
 
+int signedTriangleArea(int ax, int ay, int bx, int by, int cx, int cy) {
+    return 0.5 * (ax*(by-cy) + bx*(cy-ay) + cx*(ay-by));
+}
+
 void triangle(int ax, int ay, int bx, int by, int cx, int cy, TGAImage &framebuffer, TGAColor color) {
-    //sorting by y-coordinate ay >= by >= cy
-    if (ay < by) {
-        std::swap(ax, bx);
-        std::swap(ay, by);
-    }
-    if (ay < cy) {
-        std::swap(ax, cx);
-        std::swap(ay, cy);
-    }
-    if (by < cy) {
-        std::swap(bx, cx);
-        std::swap(by, cy);
-    }
-    // top half
-    for(int y = ay; y > by; y--){
-        int x1 = ax + ((y - ay) * (bx - ax)) / (by - ay);
-        int x2 = ax + ((y - ay) * (cx - ax)) / (cy - ay);
-        if (x1 > x2) std::swap(x1, x2);
-        for (int x = x1; x <= x2; x++) {
-            framebuffer.set(x, y, color);
-        }
-    }
-    // bottom half
-    for(int y = by; y >= cy; y--){
-        int x1 = bx + ((y - by) * (cx - bx)) / (cy - by);
-        int x2 = ax + ((y - ay) * (cx - ax)) / (cy - ay);
-        if (x1 > x2) std::swap(x1, x2);
-        for (int x = x1; x <= x2; x++) {
-            framebuffer.set(x, y, color);
+    int minx = std::min(std::min(ax, bx), cx);
+    int miny = std::min(std::min(ay, by), cy);
+    int maxx = std::max(std::max(ax, bx), cx);
+    int maxy = std::max(std::max(ay, by), cy);
+    #pragma omp parallel for
+    for (int x=minx; x<=maxx; x++) {
+        for (int y=miny; y<=maxy; y++) {
+            int alpha = signedTriangleArea(x, y, bx, by, cx, cy);
+            int beta  = signedTriangleArea(ax, ay, x, y, cx, cy);
+            int gamma = signedTriangleArea(ax, ay, bx, by, x, y);
+            if(signedTriangleArea(ax, ay, bx, by, cx, cy) < 0) {
+                alpha = -alpha;
+                beta  = -beta;
+                gamma = -gamma;
+            }
+            if (alpha >= 0 && beta >= 0 && gamma >= 0) {
+                framebuffer.set(x, y, color);
+            }
         }
     }
 }
@@ -72,7 +65,7 @@ int main(int argc, char** argv) {
     triangle(  7, 45, 35, 100, 45,  60, framebuffer, red);
     triangle(120, 35, 90,   5, 45, 110, framebuffer, white);
     triangle(115, 83, 80,  90, 85, 120, framebuffer, green);
-    framebuffer.write_tga_file("rastWithInt.tga");
+    framebuffer.write_tga_file("rastWithShoelace.tga");
     return 0;
 }
 
