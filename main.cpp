@@ -1,8 +1,8 @@
 #include "tgaimage.h"
 #include "model.h"
 
-constexpr int width  = 128;
-constexpr int height = 128;
+constexpr int width  = 1280;
+constexpr int height = 1280;
 
 constexpr TGAColor white   = {255, 255, 255, 255}; // attention, BGRA order
 constexpr TGAColor green   = {  0, 255,   0, 255};
@@ -32,7 +32,7 @@ void line(int ax, int ay, int bx, int by, TGAImage &framebuffer, TGAColor color)
     }
 }
 
-int signedTriangleArea(int ax, int ay, int bx, int by, int cx, int cy) {
+float signedTriangleArea(int ax, int ay, int bx, int by, int cx, int cy) {
     return 0.5 * (ax*(by-cy) + bx*(cy-ay) + cx*(ay-by));
 }
 
@@ -41,31 +41,47 @@ void triangle(int ax, int ay, int bx, int by, int cx, int cy, TGAImage &framebuf
     int miny = std::min(std::min(ay, by), cy);
     int maxx = std::max(std::max(ax, bx), cx);
     int maxy = std::max(std::max(ay, by), cy);
+    float area = signedTriangleArea(ax, ay, bx, by, cx, cy);
+    if(area < 1.0) {
+        return;
+    }
     #pragma omp parallel for
     for (int x=minx; x<=maxx; x++) {
         for (int y=miny; y<=maxy; y++) {
-            int alpha = signedTriangleArea(x, y, bx, by, cx, cy);
-            int beta  = signedTriangleArea(ax, ay, x, y, cx, cy);
-            int gamma = signedTriangleArea(ax, ay, bx, by, x, y);
-            if(signedTriangleArea(ax, ay, bx, by, cx, cy) < 0) {
-                alpha = -alpha;
-                beta  = -beta;
-                gamma = -gamma;
-            }
-            if (alpha >= 0 && beta >= 0 && gamma >= 0) {
+            float alpha = signedTriangleArea(x, y, bx, by, cx, cy) / area;
+            float beta  = signedTriangleArea(ax, ay, x, y, cx, cy) / area;
+            float gamma = signedTriangleArea(ax, ay, bx, by, x, y) / area;
+            // float alpha = signedTriangleArea(cx, cy, bx, by, x, y) / area;
+            // float beta  = signedTriangleArea(cx, cy, x, y, ax, ay) / area;
+            // float gamma = signedTriangleArea(x, y, bx, by, ax, ay) / area;
+            if (alpha >= 0.0 && beta >= 0.0 && gamma >= 0.0) {
                 framebuffer.set(x, y, color);
             }
         }
     }
 }
 
+std::pair<int, int> project(const vec3& v) {
+    int x = (v.x + 1.) * width / 2.;
+    int y = (v.y + 1.) * height / 2.;
+    return {x, y};
+}
+
 int main(int argc, char** argv) {
     TGAImage framebuffer(width, height, TGAImage::RGB);
 
-    triangle(  7, 45, 35, 100, 45,  60, framebuffer, red);
-    triangle(120, 35, 90,   5, 45, 110, framebuffer, white);
-    triangle(115, 83, 80,  90, 85, 120, framebuffer, green);
-    framebuffer.write_tga_file("rastWithShoelace.tga");
+    Model model("african_head.obj");
+
+    for (int i=0; i<model.nfaces(); i++) {
+        auto [ax, ay] = project(model.vert(i, 0));
+        auto [bx, by] = project(model.vert(i, 1));
+        auto [cx, cy] = project(model.vert(i, 2));
+        TGAColor rnd;
+        for (int c=0; c<3; c++) rnd[c] = std::rand()%255;
+        triangle(ax, ay, bx, by, cx, cy, framebuffer, rnd);
+    }
+
+    framebuffer.write_tga_file("renderingWithCulling.tga");
     return 0;
 }
 
