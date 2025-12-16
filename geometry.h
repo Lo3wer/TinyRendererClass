@@ -94,7 +94,46 @@ template<int rows, int cols> struct mat {
     vec<cols> data[rows];
     vec<cols>& operator[](const int i)       { assert(i>=0 && i<rows); return data[i]; }
     const vec<cols>& operator[](const int i) const { assert(i>=0 && i<rows); return data[i]; }
-    template<int r=rows, int c=cols>
+
+    double det() const{
+        assert(rows==cols);
+        return ::det(*this);
+    }
+
+    double cofactor(const int row, const int col) const {
+        assert(row==col && row>=2); // rules for cofactor
+        mat<rows-1,cols-1> sub;
+        for (int i=0, subi=0; i<rows; i++) {
+            if (i == row) continue;
+            for (int j=0, subj=0; j<cols; j++) {
+                if (j == col) continue;
+                sub[subi][subj] = data[i][j];
+                subj++;
+            }
+            subi++;
+        }
+        return ((row+col)%2==0 ? 1 : -1) * sub.det();
+    }
+
+    mat<rows,cols> invert_transpose() const {
+        mat<rows,cols> a_transpose;
+        for (int i=0; i<rows; i++)
+            for (int j=0; j<cols; j++) a_transpose[i][j]=cofactor(i,j);
+        return a_transpose/(data[0] * a_transpose[0]);// equivalent to det()
+    }
+
+    mat<rows,cols> invert() const {
+        return invert_transpose().transpose();
+    }
+
+    mat<cols,rows> transpose() const {
+        mat<cols,rows> result;
+        for (int i=0; i<cols; i++){
+            for (int j=0; j<rows; j++)
+                result[i][j] = data[j][i];
+        }
+        return result;
+    }
 };
 
 template<int rows, int cols> vec<rows> operator*(const mat<rows,cols>& m, const vec<cols>& v) {
@@ -153,5 +192,16 @@ template<int rows, int cols> mat<rows,cols> operator-(const mat<rows,cols>& lhs,
         for (int j=0; j<cols; j++)
             result[i][j] = lhs[i][j] - rhs[i][j];
     return result;
+}
+
+template<int n> double det(const mat<n,n>& src) { //recursive determinant calculation
+    if (n == 1){
+        return src[0][0];
+    }
+    double ret = 0;
+    for (int i=0; i<n; i++){
+        ret += src[0][i] * src.cofactor(0,i)
+    }
+    return ret;
 }
 
