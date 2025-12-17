@@ -18,6 +18,14 @@ vec3 rot(vec3 v) {
     return Ry * v;
 }
 
+vec3 cent(vec3 v) {
+    constexpr double c = 10.;
+    double f = 1.0-v.z/c;
+    v / f;
+    v.z *= sqrt(2); // largest amount
+    return v;
+}
+
 void line(int ax, int ay, int bx, int by, TGAImage& framebuffer, TGAColor color) {
     bool steep = false;
     if (std::abs(ax - bx) < std::abs(ay - by)) {
@@ -86,17 +94,19 @@ int main(int argc, char** argv) {
     // Model model("C:\\Users\\TestUser\\TinyRendererClass\\obj\\diablo3_pose\\diablo3_pose.obj");
 
     for (int i = 0; i < model.nfaces(); i++) {
-        auto [ax, ay, az] = project(rot(model.vert(i, 0)));
-        auto [bx, by, bz] = project(rot(model.vert(i, 1)));
-        auto [cx, cy, cz] = project(rot(model.vert(i, 2)));
+        auto [ax, ay, az] = project(cent(rot(model.vert(i, 0))));
+        auto [bx, by, bz] = project(cent(rot(model.vert(i, 1))));
+        auto [cx, cy, cz] = project(cent(rot(model.vert(i, 2))));
         TGAColor rnd;
         for (int c = 0; c < 3; c++)
             rnd[c] = std::rand() % 255;
         triangle(ax, ay, az, bx, by, bz, cx, cy, cz, framebuffer, zbuffer, rnd);
     }
 
-    framebuffer.write_tga_file("rotatedHead.tga");
-    zbuffer.write_tga_file("rotatedHeadZBuffer.tga");
+    std::string name = "rotatedHead10dist";
+
+    framebuffer.write_tga_file(name + ".tga");
+    zbuffer.write_tga_file(name + "ZBuffer.tga");
 
     return 0;
 }
