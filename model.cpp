@@ -24,12 +24,13 @@ Model::Model(const std::string& filename) {
             vec3 v;
             iss >> v.x >> v.y >> v.z;
             vertices.push_back(v);
-        } else if (prefix == "f") {
+        }
+        else if (prefix == "f") {
             // Read face: f v1 v2 v3 (or f v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3)
             // Only use vertex indices (v1, v2, v3) add 3 indices to faces vector
             std::string vertex;
             int counter = 0;
-            
+
             while (iss >> vertex && counter < 3) {//ensure there are only 3 vertices per face
                 // Handle "v/vt/vn" format - we only want the first number
                 int slash_pos = vertex.find('/');
@@ -37,7 +38,7 @@ Model::Model(const std::string& filename) {
                     vertex = vertex.substr(0, slash_pos);
                 }
                 // No slashes, use the whole string if condition fails
-                
+
                 int idx = std::stoi(vertex);  // Convert string to int
                 faces.push_back(idx - 1); // OBJ indices are 1-based
                 counter++;
@@ -46,9 +47,9 @@ Model::Model(const std::string& filename) {
     }
 
     file.close();
-    std::cout << "Loaded " << filename << ": " 
-              << vertices.size() << " vertices, " 
-              << faces.size() << " faces" << std::endl;
+    std::cout << "Loaded " << filename << ": "
+        << vertices.size() << " vertices, "
+        << faces.size() << " faces" << std::endl;
 }
 
 // Destructor
@@ -68,7 +69,7 @@ int Model::nfaces() const {
 
 // Return vertex at index i
 vec3 Model::vert(const int i) const {
-    if(i < 0 || i >= vertices.size()) {
+    if (i < 0 || i >= vertices.size()) {
         std::cerr << "Index out of bounds in Model::vert()" << std::endl;
         return vec3();
     }
@@ -78,12 +79,12 @@ vec3 Model::vert(const int i) const {
 // Return the nth vertex of face iface
 vec3 Model::vert(const int iface, const int nthvert) const {
     int index = iface * 3 + nthvert;
-    if(index < 0 || index >= faces.size()) {
+    if (index < 0 || index >= faces.size()) {
         std::cerr << "Index out of bounds in Model::vert()" << std::endl;
         return vec3();
     }
     int face_index = faces[index];
-    if(face_index < 0 || face_index >= vertices.size()) {
+    if (face_index < 0 || face_index >= vertices.size()) {
         std::cerr << "Vertex index out of bounds in Model::vert()" << std::endl;
         return vec3();
     }
