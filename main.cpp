@@ -19,11 +19,8 @@ vec3 rot(vec3 v) {
 }
 
 vec3 cent(vec3 v) {
-    constexpr double c = 10.;
-    double f = 1.0-v.z/c;
-    v / f;
-    v.z *= sqrt(2); // largest amount
-    return v;
+    constexpr double c = 3.;
+    return v/(1.0-v.z/c);
 }
 
 void line(int ax, int ay, int bx, int by, TGAImage& framebuffer, TGAColor color) {
