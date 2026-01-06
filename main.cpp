@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
 
     lookat(eye, center, up);                              // build the ModelView   matrix
     perspective(norm(eye-center));                        // build the Perspective matrix
-    viewport(width/16, height/16, width*7/8, height*7/8); // build the Viewport    matrix
+    viewport(0, 0, width, height); // build the Viewport    matrix
 
     TGAImage framebuffer(width, height, TGAImage::RGB);
     std::vector<double> zbuffer(width*height, -std::numeric_limits<double>::max());
