@@ -24,7 +24,7 @@ void viewport(const int x, const int y, const int w, const int h) {
 
 void rasterize(const vec4 clip[3], std::vector<double> &zbuffer, TGAImage &framebuffer, const TGAColor color) {
     vec4 ndc[3]    = { clip[0]/clip[0].w, clip[1]/clip[1].w, clip[2]/clip[2].w };                // normalized device coordinates
-    vec2 screen[3] = { {(Viewport*ndc[0])[0],(Viewport*ndc[0])[1]}, {(Viewport*ndc[1])[0],(Viewport*ndc[1])[1]}, {(Viewport*ndc[2])[0],(Viewport*ndc[2])[1]}}; // screen coordinates
+    vec2 screen[3] = { {(Viewport*ndc[0]).xy()}, {(Viewport*ndc[1]).xy()}, {(Viewport*ndc[2]).xy()}}; // screen coordinates
 
     mat<3,3> ABC = {{ {screen[0].x, screen[0].y, 1.}, {screen[1].x, screen[1].y, 1.}, {screen[2].x, screen[2].y, 1.} }};
     if (ABC.det()<1) return; // backface culling + discarding triangles that cover less than a pixel
@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    framebuffer.write_tga_file("framebuffer.tga");
+    framebuffer.write_tga_file("framebuffertest.tga");
     return 0;
 }
 

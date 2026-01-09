@@ -72,6 +72,8 @@ template<> struct vec<4> {
     double x = 0, y = 0, z = 0, w = 0;
     double& operator[](const int i)       { assert(i>=0 && i<4); return i ? (1==i ? y : (2==i ? z : w)) : x; }
     double  operator[](const int i) const { assert(i>=0 && i<4); return i ? (1==i ? y : (2==i ? z : w)) : x; }
+    vec<2> xy()  const { return {x, y};    }
+    vec<3> xyz() const { return {x, y, z}; }
 };
 
 typedef vec<2> vec2;

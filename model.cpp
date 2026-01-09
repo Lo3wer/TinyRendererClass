@@ -70,7 +70,7 @@ int Model::nfaces() const {
 // Return vertex at index i
 vec3 Model::vert(const int i) const {
     if (i < 0 || i >= vertices.size()) {
-        std::cerr << "Index out of bounds in Model::vert()" << std::endl;
+        //std::cerr << "Index out of bounds in Model::vert()" << std::endl;
         return vec3();
     }
     return vertices[i];
@@ -80,12 +80,12 @@ vec3 Model::vert(const int i) const {
 vec3 Model::vert(const int iface, const int nthvert) const {
     int index = iface * 3 + nthvert;
     if (index < 0 || index >= faces.size()) {
-        std::cerr << "Index out of bounds in Model::vert()" << std::endl;
+        //std::cerr << "Index out of bounds in Model::vert()" << std::endl;
         return vec3();
     }
     int face_index = faces[index];
     if (face_index < 0 || face_index >= vertices.size()) {
-        std::cerr << "Vertex index out of bounds in Model::vert()" << std::endl;
+        //std::cerr << "Vertex index out of bounds in Model::vert()" << std::endl;
         return vec3();
     }
     return vertices[face_index];
