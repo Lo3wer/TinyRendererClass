@@ -1,0 +1,20 @@
+[
+{
+  "directory": "C:/Users/leozh/TinyRendererClass/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -g -std=gnu++17 -o CMakeFiles\\renderer.dir\\main.cpp.obj -c C:\\Users\\leozh\\TinyRendererClass\\main.cpp",
+  "file": "C:/Users/leozh/TinyRendererClass/main.cpp",
+  "output": "C:/Users/leozh/TinyRendererClass/build/CMakeFiles/renderer.dir/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/leozh/TinyRendererClass/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -g -std=gnu++17 -o CMakeFiles\\renderer.dir\\tgaimage.cpp.obj -c C:\\Users\\leozh\\TinyRendererClass\\tgaimage.cpp",
+  "file": "C:/Users/leozh/TinyRendererClass/tgaimage.cpp",
+  "output": "C:/Users/leozh/TinyRendererClass/build/CMakeFiles/renderer.dir/tgaimage.cpp.obj"
+},
+{
+  "directory": "C:/Users/leozh/TinyRendererClass/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -g -std=gnu++17 -o CMakeFiles\\renderer.dir\\model.cpp.obj -c C:\\Users\\leozh\\TinyRendererClass\\model.cpp",
+  "file": "C:/Users/leozh/TinyRendererClass/model.cpp",
+  "output": "C:/Users/leozh/TinyRendererClass/build/CMakeFiles/renderer.dir/model.cpp.obj"
+}
+]
