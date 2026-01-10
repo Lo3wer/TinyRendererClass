@@ -73,6 +73,14 @@ build CMakeFiles/renderer.dir/model.cpp.obj: CXX_COMPILER__renderer_unscanned_De
   OBJECT_FILE_DIR = CMakeFiles\renderer.dir
   TARGET_SUPPORT_DIR = CMakeFiles\renderer.dir
 
+build CMakeFiles/renderer.dir/sgl.cpp.obj: CXX_COMPILER__renderer_unscanned_Debug C$:/Users/leozh/TinyRendererClass/sgl.cpp || cmake_object_order_depends_target_renderer
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\renderer.dir\sgl.cpp.obj.d
+  FLAGS = -g -std=gnu++17
+  OBJECT_DIR = CMakeFiles\renderer.dir
+  OBJECT_FILE_DIR = CMakeFiles\renderer.dir
+  TARGET_SUPPORT_DIR = CMakeFiles\renderer.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target renderer
@@ -81,7 +89,7 @@ build CMakeFiles/renderer.dir/model.cpp.obj: CXX_COMPILER__renderer_unscanned_De
 #############################################
 # Link the executable renderer.exe
 
-build renderer.exe: CXX_EXECUTABLE_LINKER__renderer_Debug CMakeFiles/renderer.dir/main.cpp.obj CMakeFiles/renderer.dir/tgaimage.cpp.obj CMakeFiles/renderer.dir/model.cpp.obj
+build renderer.exe: CXX_EXECUTABLE_LINKER__renderer_Debug CMakeFiles/renderer.dir/main.cpp.obj CMakeFiles/renderer.dir/tgaimage.cpp.obj CMakeFiles/renderer.dir/model.cpp.obj CMakeFiles/renderer.dir/sgl.cpp.obj
   CONFIG = Debug
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32

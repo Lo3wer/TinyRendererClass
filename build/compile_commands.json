@@ -16,5 +16,11 @@
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -g -std=gnu++17 -o CMakeFiles\\renderer.dir\\model.cpp.obj -c C:\\Users\\leozh\\TinyRendererClass\\model.cpp",
   "file": "C:/Users/leozh/TinyRendererClass/model.cpp",
   "output": "C:/Users/leozh/TinyRendererClass/build/CMakeFiles/renderer.dir/model.cpp.obj"
+},
+{
+  "directory": "C:/Users/leozh/TinyRendererClass/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -g -std=gnu++17 -o CMakeFiles\\renderer.dir\\sgl.cpp.obj -c C:\\Users\\leozh\\TinyRendererClass\\sgl.cpp",
+  "file": "C:/Users/leozh/TinyRendererClass/sgl.cpp",
+  "output": "C:/Users/leozh/TinyRendererClass/build/CMakeFiles/renderer.dir/sgl.cpp.obj"
 }
 ]
