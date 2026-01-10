@@ -35,14 +35,15 @@ int main(int argc, char** argv) {
 
     constexpr int width  = 800;    // output image size
     constexpr int height = 800;
-    constexpr int ambientWeight = 1;
-    constexpr int diffuseWeight = 2;
+    constexpr int ambientWeight = 10;
+    constexpr int diffuseWeight = 10;
     constexpr int specularWeight = 2;
-    constexpr int shinyness = 1;
+    constexpr int darkness = 1; //add in case model is too bright in some parts
+    constexpr int shinyness = 4;
     constexpr vec3    eye{-1,0,2}; // camera position
     constexpr vec3 center{0,0,0};  // camera direction
     constexpr vec3     up{0,1,0};  // camera up vector
-    constexpr vec3 lightSource{1,0,0}; // source of the light
+    constexpr vec3 lightSource{-1,0,0}; // source of the light
 
     lookat(eye, center, up); // build the ModelView   matrix
     init_perspective(norm(eye-center)); // build the Perspective matrix
@@ -60,9 +61,9 @@ int main(int argc, char** argv) {
             vec3 normal = cross(b.xyz()-a.xyz(), c.xyz()-a.xyz())/norm(cross(b.xyz()-a.xyz(), c.xyz()-a.xyz())); //unit normal vector
             vec3 reflection = 2*normal*(normal*lightSource) - lightSource; //reflection of light
             double diffuseDegree = std::max<double>(0.,normal*lightSource);
-            //double specularDegree = std::pow(std::max<double>(0.,eye*reflection),shinyness);
-            //uint8_t sumColor = uint8_t(255*(ambientWeight + diffuseDegree*diffuseWeight + specularDegree*specularWeight)/(ambientWeight + diffuseWeight + specularWeight)); //normalizing everything to uint8_t
-            uint8_t sumColor = uint8_t(255*(ambientWeight + diffuseDegree*diffuseWeight)/(ambientWeight + diffuseWeight));
+            double specularDegree = std::pow<double>(std::max<double>(0.,eye*reflection),shinyness);
+            uint8_t sumColor = uint8_t(std::min<int>(255,255*(ambientWeight + diffuseDegree*diffuseWeight + specularDegree*specularWeight)/(ambientWeight + diffuseWeight + specularWeight + darkness))); //normalizing everything to uint8_t
+            //uint8_t sumColor = uint8_t(std::min<int>(255,255*(ambientWeight + diffuseDegree*diffuseWeight)/(ambientWeight + diffuseWeight)));
             shader.color = {sumColor, sumColor, sumColor, 255};
             Triangle clip = {a,b,c};
             rasterize(clip, shader, framebuffer);
