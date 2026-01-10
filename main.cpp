@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <algorithm>
 #include "sgl.h"
 #include "model.h"
 
@@ -34,27 +35,41 @@ int main(int argc, char** argv) {
 
     constexpr int width  = 800;    // output image size
     constexpr int height = 800;
+    constexpr int ambientWeight = 1;
+    constexpr int diffuseWeight = 2;
+    constexpr int specularWeight = 2;
+    constexpr int shinyness = 1;
     constexpr vec3    eye{-1,0,2}; // camera position
     constexpr vec3 center{0,0,0};  // camera direction
     constexpr vec3     up{0,1,0};  // camera up vector
+    constexpr vec3 lightSource{1,0,0}; // source of the light
 
     lookat(eye, center, up); // build the ModelView   matrix
     init_perspective(norm(eye-center)); // build the Perspective matrix
     init_viewport(0, 0, width, height); // build the Viewport matrix
     init_zbuffer(width,height);
 
-    TGAImage framebuffer(width, height, TGAImage::RGB, {177, 195, 209, 255});
+    TGAImage framebuffer(width, height, TGAImage::RGB, {0, 0, 0, 255});
     for (int m=1; m<argc; m++) { // iterate through all input objects
         Model model(argv[m]);
         RandomShader shader(model);
         for (int i=0; i<model.nfaces(); i++) { // iterate through all triangles
-            shader.color = {uint8_t(std::rand()%255), uint8_t(std::rand()%255), uint8_t(std::rand()%255), 255};
-            Triangle clip = {shader.vertex(i,0), shader.vertex(i,1),shader.vertex(i,2)};
+            vec4 a = shader.vertex(i,0);
+            vec4 b = shader.vertex(i,1);
+            vec4 c = shader.vertex(i,2);
+            vec3 normal = cross(b.xyz()-a.xyz(), c.xyz()-a.xyz())/norm(cross(b.xyz()-a.xyz(), c.xyz()-a.xyz())); //unit normal vector
+            vec3 reflection = 2*normal*(normal*lightSource) - lightSource; //reflection of light
+            double diffuseDegree = std::max<double>(0.,normal*lightSource);
+            //double specularDegree = std::pow(std::max<double>(0.,eye*reflection),shinyness);
+            //uint8_t sumColor = uint8_t(255*(ambientWeight + diffuseDegree*diffuseWeight + specularDegree*specularWeight)/(ambientWeight + diffuseWeight + specularWeight)); //normalizing everything to uint8_t
+            uint8_t sumColor = uint8_t(255*(ambientWeight + diffuseDegree*diffuseWeight)/(ambientWeight + diffuseWeight));
+            shader.color = {sumColor, sumColor, sumColor, 255};
+            Triangle clip = {a,b,c};
             rasterize(clip, shader, framebuffer);
         }
     }
 
-    framebuffer.write_tga_file("framebuffersgl.tga");
+    framebuffer.write_tga_file("framebufferphong.tga");
     return 0;
 }
 
