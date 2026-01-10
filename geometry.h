@@ -138,11 +138,7 @@ template<int nrows, int ncols> struct mat {
 template<int nrows, int ncols> vec<nrows> operator*(const mat<nrows,ncols>& m, const vec<ncols>& v) {
     vec<nrows> result;
     for (int i=0; i<nrows; i++){
-        int sum = 0;
-        for(int j=0; j<ncols; j++){
-            sum+= m[i][j] * v[j];
-        }
-        result[i] = sum;
+        result[i] = m.rows[i] * v;
     }
     return result;
 }

@@ -1,8 +1,7 @@
 # ninja log v7
-33	438	7896503926555606	CMakeFiles/renderer.dir/tgaimage.cpp.obj	d68436c780cf8d62
-31	464	7897028112527244	CMakeFiles/renderer.dir/model.cpp.obj	da23c788f8c5024f
-62	507	7897029250951743	CMakeFiles/renderer.dir/main.cpp.obj	e8189029f991accc
-507	594	7897029255409052	renderer.exe	ee10e3533d445d88
-70	543	7897035007332209	CMakeFiles/renderer.dir/model.cpp.obj	da23c788f8c5024f
-67	558	7897035007332209	CMakeFiles/renderer.dir/main.cpp.obj	e8189029f991accc
-558	661	7897035012272100	renderer.exe	ee10e3533d445d88
+33	558	7897038526787493	CMakeFiles/renderer.dir/tgaimage.cpp.obj	d68436c780cf8d62
+78	558	7897073816475398	CMakeFiles/renderer.dir/model.cpp.obj	da23c788f8c5024f
+62	446	7897074709839751	CMakeFiles/renderer.dir/main.cpp.obj	e8189029f991accc
+446	539	7897074713593432	renderer.exe	ee10e3533d445d88
+65	488	7897075155780720	CMakeFiles/renderer.dir/main.cpp.obj	e8189029f991accc
+488	577	7897075160100060	renderer.exe	ee10e3533d445d88
