@@ -23,6 +23,7 @@ struct RandomShader : IShader {
     }
 
     virtual std::pair<bool,TGAColor> fragment(const vec3 bar) const {
+        
         return {false, color};
     }
 };
