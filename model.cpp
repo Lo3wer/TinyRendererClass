@@ -40,26 +40,36 @@ Model::Model(const std::string& filename) {
             int counter = 0;
 
             while (iss >> vertex && counter < 3) {//ensure there are only 3 vertices per face
-                // Handle "v/vt/vn" format
-                int slash_pos = vertex.find('/');
-                if (slash_pos != -1) {
-                    v = vertex.substr(0,slash_pos);
-                    vertex = vertex.substr(slash_pos,vertex.size());
-                }
-                slash_pos = vertex.find('/');
-                if (slash_pos != -1) {
-                    vt = vertex.substr(0,slash_pos);
-                    if(slash_pos+1<vertex.size()){
-                        vn = vertex.substr(slash_pos+1,vertex.size());
+                // Handle "v/vt/vn" or "v//vn" format
+                int slash_pos1 = vertex.find('/');
+                int slash_pos2 = vertex.find('/', slash_pos1 + 1);
+                
+                if (slash_pos1 != std::string::npos) {
+                    v = vertex.substr(0, slash_pos1);
+                    if (slash_pos2 != std::string::npos) {
+                        // Format is v/vt/vn or v//vn
+                        if (slash_pos2 > slash_pos1 + 1) {
+                            // v/vt/vn format
+                            vt = vertex.substr(slash_pos1 + 1, slash_pos2 - slash_pos1 - 1);
+                        }
+                        // Extract normal index
+                        vn = vertex.substr(slash_pos2 + 1);
                     }
+                } else {
+                    // No slashes, just vertex index
+                    v = vertex;
                 }
-                //assert(v!=nullptr && vt!=nullptr && vn!=nullptr);
-                // No slashes, use the whole string if condition fails
 
                 int vertidx = std::stoi(v);  // Convert string to int
-                int normidx = std::stoi(vn); 
                 faces.push_back(vertidx-1); // OBJ indices are 1-based
-                normalIndices.push_back(normidx-1);
+                
+                if (!vn.empty()) {
+                    int normidx = std::stoi(vn);
+                    normalIndices.push_back(normidx-1);
+                } else {
+                    normalIndices.push_back(-1); // No normal for this vertex
+                }
+                
                 counter++;
             }
         }
@@ -68,7 +78,8 @@ Model::Model(const std::string& filename) {
     file.close();
     std::cout << "Loaded " << filename << ": "
         << vertices.size() << " vertices, "
-        << faces.size() << " faces" << std::endl;
+        << faces.size() << " faces," 
+        << normals.size() << " normals" << std::endl;
 }
 
 // Destructor
@@ -117,12 +128,10 @@ vec3 Model::vert(const int iface, const int nthvert) const {
 vec3 Model::normalVert(const int normalIndex, const int nthNormal) const {
     int index = normalIndex * 3 + nthNormal;
     if (index < 0 || index >= normalIndices.size()) {
-        //std::cerr << "Index out of bounds in Model::vert()" << std::endl;
         return vec3();
     }
     int normal_index = normalIndices[index];
     if (normal_index < 0 || normal_index >= normals.size()) {
-        //std::cerr << "Vertex index out of bounds in Model::vert()" << std::endl;
         return vec3();
     }
     return normals[normal_index];
