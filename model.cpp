@@ -25,6 +25,11 @@ Model::Model(const std::string& filename) {
             iss >> v.x >> v.y >> v.z;
             vertices.push_back(v);
         }
+        else if (prefix == "vt") {
+            vec2 uv;
+            iss >> uv.x >> uv.y;
+            uvs.push_back(uv);
+        }
         else if (prefix == "vn"){
             vec3 vn;
             iss >> vn.x >> vn.y >> vn.z;
@@ -54,6 +59,9 @@ Model::Model(const std::string& filename) {
                         }
                         // Extract normal index
                         vn = vertex.substr(slash_pos2 + 1);
+                    } else {
+                        // Format is v/vt (no normal)
+                        vt = vertex.substr(slash_pos1 + 1);
                     }
                 } else {
                     // No slashes, just vertex index
@@ -62,6 +70,13 @@ Model::Model(const std::string& filename) {
 
                 int vertidx = std::stoi(v);  // Convert string to int
                 faces.push_back(vertidx-1); // OBJ indices are 1-based
+                
+                if (!vt.empty()) {
+                    int uvidx = std::stoi(vt);
+                    uvIndices.push_back(uvidx-1);
+                } else {
+                    uvIndices.push_back(-1);
+                }
                 
                 if (!vn.empty()) {
                     int normidx = std::stoi(vn);
@@ -78,7 +93,8 @@ Model::Model(const std::string& filename) {
     file.close();
     std::cout << "Loaded " << filename << ": "
         << vertices.size() << " vertices, "
-        << faces.size() << " faces," 
+        << uvs.size() << " UVs, "
+        << faces.size() << " faces, " 
         << normals.size() << " normals" << std::endl;
 }
 
@@ -135,4 +151,16 @@ vec3 Model::normalVert(const int normalIndex, const int nthNormal) const {
         return vec3();
     }
     return normals[normal_index];
+}
+
+vec2 Model::uv(const int iface, const int nthvert) const {
+    int index = iface * 3 + nthvert;
+    if (index < 0 || index >= uvIndices.size()) {
+        return vec2();
+    }
+    int uv_index = uvIndices[index];
+    if (uv_index < 0 || uv_index >= uvs.size()) {
+        return vec2();
+    }
+    return uvs[uv_index];
 }
