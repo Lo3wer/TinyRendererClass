@@ -1,3 +1,0 @@
-C:/Users/leozh/TinyRendererClass/build/CMakeFiles/renderer.dir
-C:/Users/leozh/TinyRendererClass/build/CMakeFiles/edit_cache.dir
-C:/Users/leozh/TinyRendererClass/build/CMakeFiles/rebuild_cache.dir
