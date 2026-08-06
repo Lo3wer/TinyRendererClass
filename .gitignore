@@ -1,0 +1,28 @@
+# Build output (CMake / Visual Studio)
+build/
+.vs/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+build.ninja
+.ninja_deps
+.ninja_log
+*.vcxproj
+*.vcxproj.filters
+*.sln
+*.suo
+*.user
+
+# Compiled objects & binaries (Makefile)
+*.o
+*.exe
+*.pdb
+*.ilk
+*.lib
+*.a
+*.dll
+*.exp
+
+# Rendered output images (repo root only; keeps obj/ textures and notes/)
+/*.tga
