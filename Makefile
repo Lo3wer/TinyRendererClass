@@ -1,5 +1,6 @@
 CXX      ?= g++
 CXXFLAGS ?= -std=c++17 -O2 -Wall -Wextra
+OMPFLAGS ?= -fopenmp
 LDFLAGS  ?=
 
 SRCS := main.cpp tgaimage.cpp model.cpp sgl.cpp
@@ -25,10 +26,10 @@ endif
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OMPFLAGS) $(LDFLAGS) -o $@ $(OBJS)
 
 %.o: %.cpp $(HDRS)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(OMPFLAGS) -c $< -o $@
 
 run: $(TARGET)
 	$(RUN) $(MODEL)
